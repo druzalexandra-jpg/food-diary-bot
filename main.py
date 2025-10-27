@@ -7,7 +7,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 import requests
 
-# === Настройки (заполняются автоматически из Railway) ===
+# === Настройки ===
 BOT_TOKEN = os.environ['BOT_TOKEN']
 CREDENTIALS_JSON = os.environ['GOOGLE_CREDENTIALS_JSON']
 SHEET_URL = os.environ['GOOGLE_SHEET_URL']
@@ -51,8 +51,7 @@ def get_nutrition(product_name):
 # === Обработка сообщений ===
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip().lower()
-    user = update.effective_user
-
+    
     # Парсинг: "овсянка 40г" или "яйцо 2 шт"
     match = re.search(r'([а-яa-z\s\-]+?)\s*(\d+)\s*(г|шт|ml|мл)', text)
     if not match:
