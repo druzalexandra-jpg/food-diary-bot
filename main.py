@@ -2,7 +2,7 @@ import os
 import re
 import json
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2 import service_account
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 import requests
@@ -15,9 +15,9 @@ SHEET_URL = os.environ['GOOGLE_SHEET_URL']
 # === Подключение к Google Sheets ===
 def get_worksheet():
     creds_dict = json.loads(CREDENTIALS_JSON)
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(
+    creds = service_account.Credentials.from_service_account_info(
         creds_dict,
-        ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+        scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
     )
     client = gspread.authorize(creds)
     sheet = client.open_by_url(SHEET_URL).sheet1
@@ -111,4 +111,3 @@ if __name__ == '__main__':
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     print("Бот запущен!")
     app.run_polling()
-
